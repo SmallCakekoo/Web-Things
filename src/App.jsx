@@ -1,11 +1,11 @@
-import { ShoppingCart } from './components/ShoppingCart';
+import { Card } from './components/Card';
 import './App.css';
 
 function App() {
   return (
     <>
-      <h1>Shopping Cat App 𐔌՞ ܸ.ˬ.ܸ՞𐦯</h1>
-      <ShoppingCart />
+      <h1>Pokemon, atrápalos ya 𐔌՞ ܸ.ˬ.ܸ՞𐦯</h1>
+      <Card/>
     </>
   );
 }

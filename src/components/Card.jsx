@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './Card.css';
 
 // Crear un input que cada vez que escriba busque esa cantidad de pokemones y los pinte. Por ejempo, si escribo 5, que me muestre los 5 usando el limit rate.
 

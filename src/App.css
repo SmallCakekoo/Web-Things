@@ -1,45 +1,308 @@
-/* Fondo general como escritorio clásico */
+/* App.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+  --red-1: #e74b4b;
+  --red-2: #c83a3a;
+
+  --ink: #0b0f14;
+  --coal: #0f1620;
+
+  --blue-1: #9ed0ff;
+  --blue-2: #6aa7e8;
+  --blue-3: #3c6fa8;
+
+  --panel: #bfe5ff;
+  --panel-2: #8cc8ff;
+
+  --line: #0a0d12;
+  --line-2: #243243;
+
+  --white: #f7fbff;
+  --muted: #c7d6e6;
+
+  --shadow: 0 18px 0 rgba(0, 0, 0, 0.28), 0 40px 80px rgba(0, 0, 0, 0.45);
+  --pixel: 4px; /* grosor “pixel” */
+}
+
+/* Reset básico */
+* {
+  box-sizing: border-box;
+}
+html,
 body {
+  height: 100%;
   margin: 0;
-  background: #008080; /* clásico verde azulado Win95 */
 }
 
-/* Ventana principal */
+body {
+  display: flex;
+  justify-content: center; /* centro horizontal */
+  align-items: center; /* centro vertical */
+
+  font-family: 'Press Start 2P', system-ui, sans-serif;
+  color: var(--white);
+
+  /* Fondo oscuro tipo overlay */
+  background:
+    radial-gradient(1200px 700px at 20% 0%, rgba(231, 75, 75, 0.18), transparent 55%),
+    radial-gradient(900px 600px at 90% 20%, rgba(158, 208, 255, 0.16), transparent 55%),
+    linear-gradient(180deg, #0a0f16, #070a0f 60%, #06080c);
+}
+
+/* Contenedor principal */
 #root {
-  width: min(960px, 95vw);
-  margin: 2rem auto;
-  padding: 0;
+  width: 100%;
+  max-width: 1000px;
 
-  font-family: "MS Sans Serif", Tahoma, Verdana, sans-serif;
-  font-size: 14px;
-  background: #c0c0c0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+/* Barra superior estilo overlay */
+h1 {
+  width: min(980px, 100%);
+  margin: 0;
+  padding: 18px 18px;
 
-  /* Borde 3D clásico */
-  border-top: 3px solid #ffffff;
-  border-left: 3px solid #ffffff;
-  border-right: 3px solid #404040;
-  border-bottom: 3px solid #404040;
+  text-align: center;
+  letter-spacing: 0.5px;
+  font-size: clamp(14px, 1.6vw, 18px);
+  line-height: 1.35;
+
+  /* barra roja */
+  background: linear-gradient(180deg, var(--red-1), var(--red-2));
+  position: relative;
+
+  /* borde pixel */
+  border: var(--pixel) solid var(--line);
+  box-shadow: 0 10px 0 rgba(0, 0, 0, 0.25);
 }
 
-/* Barra de título */
-#root::before {
-  content: "ShoppingCart.exe";
+/* “Pokeballs” fake en esquinas */
+h1::before,
+h1::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  border: var(--pixel) solid var(--line);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, #ffffff 0 48%, var(--line) 48% 56%, #ffffff 56% 100%),
+    radial-gradient(
+      circle at 50% 54%,
+      #ffffff 0 22%,
+      var(--line) 22% 40%,
+      transparent 41%
+    );
+}
+h1::before {
+  left: 14px;
+}
+h1::after {
+  right: 14px;
+}
+
+/* ===== Card overlay ===== */
+
+.card {
+  width: min(980px, 100%);
+  padding: 18px;
+  position: relative;
+
+  /* fondo tipo “frame” */
+  background:
+    /* brillo diagonal */
+    linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.1) 0 12%,
+      transparent 12% 28%,
+      rgba(255, 255, 255, 0.06) 28% 36%,
+      transparent 36% 60%,
+      rgba(255, 255, 255, 0.06) 60% 68%,
+      transparent 68% 100%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 55%),
+    /* panel base */
+    linear-gradient(180deg, rgba(36, 50, 67, 0.65), rgba(10, 14, 20, 0.65));
+  border: var(--pixel) solid var(--line);
+  box-shadow: var(--shadow);
+  border-radius: 10px;
+
+  /* rejilla sutil tipo “texture” */
+  overflow: hidden;
+}
+
+/* “Header” rojo dentro del frame, como overlay */
+.card::before {
+  content: 'POKEMON STREAM OVERLAY';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 14px;
+
+  padding: 12px 12px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+
+  background: linear-gradient(180deg, var(--red-1), var(--red-2));
+  border: var(--pixel) solid var(--line);
+  box-shadow: 0 10px 0 rgba(0, 0, 0, 0.22);
+  border-radius: 8px;
+}
+
+/* Layout interno sin tocar JSX:
+   hacemos que label+input+button se vean como “panel” arriba */
+.card > label {
   display: block;
-  padding: 6px 10px;
-  background: #000080; /* azul clásico */
-  color: white;
-  font-weight: bold;
-  font-size: 14px;
+  margin-top: 74px; /* deja espacio al “header” */
+  margin-bottom: 10px;
+  font-size: 11px;
+  color: var(--muted);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
 }
 
-/* Contenido interno */
-#root > * {
-  padding: 1rem;
+/* Input pixel */
+.card input {
+  width: 100%;
+  padding: 14px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--ink);
+
+  background: linear-gradient(180deg, #ffffff, #eaf4ff);
+  border: var(--pixel) solid var(--line);
+  outline: none;
+  border-radius: 8px;
+
+  box-shadow:
+    inset 0 6px 0 rgba(0, 0, 0, 0.12),
+    0 10px 0 rgba(0, 0, 0, 0.22);
 }
 
-/* Título principal */
-div h1 {
-  margin: 0 0 1rem 0;
-  font-size: 16px;
-  font-weight: bold;
+/* “Focus” como highlight azul */
+.card input:focus {
+  box-shadow:
+    inset 0 6px 0 rgba(0, 0, 0, 0.1),
+    0 10px 0 rgba(0, 0, 0, 0.22),
+    0 0 0 4px rgba(158, 208, 255, 0.35);
+}
+
+/* Botón estilo “A/B” */
+.card button {
+  margin-top: 14px;
+  width: 100%;
+  padding: 14px 12px;
+
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--ink);
+
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: var(--pixel) solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+
+  box-shadow:
+    inset 0 6px 0 rgba(255, 255, 255, 0.35),
+    0 12px 0 rgba(0, 0, 0, 0.25);
+  transform: translateY(0);
+  transition:
+    transform 0.05s ease,
+    filter 0.15s ease;
+}
+
+.card button:hover {
+  filter: brightness(1.05);
+}
+.card button:active {
+  transform: translateY(6px);
+  box-shadow:
+    inset 0 6px 0 rgba(255, 255, 255, 0.25),
+    0 6px 0 rgba(0, 0, 0, 0.22);
+}
+
+/* Contenedor de resultados (es el div que envuelve el map) */
+.card > div {
+  margin-top: 18px;
+  padding: 14px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(158, 208, 255, 0.22),
+    rgba(106, 167, 232, 0.12)
+  );
+  border: var(--pixel) solid var(--line);
+  border-radius: 10px;
+
+  box-shadow:
+    inset 0 8px 0 rgba(255, 255, 255, 0.08),
+    0 12px 0 rgba(0, 0, 0, 0.22);
+
+  /* grid sin tocar JSX */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+
+/* Cada nombre (h1 dentro del map) como “tile” */
+.card > div > h1 {
+  margin: 0;
+  padding: 12px 10px;
+  font-size: 11px;
+  line-height: 1.35;
+
+  color: var(--ink);
+  text-transform: uppercase;
+
+  background: linear-gradient(180deg, #ffffff, #eaf4ff);
+  border: var(--pixel) solid var(--line);
+  border-radius: 10px;
+
+  box-shadow:
+    inset 0 6px 0 rgba(0, 0, 0, 0.1),
+    0 10px 0 rgba(0, 0, 0, 0.2);
+
+  /* detalle tipo “subpanel” */
+  position: relative;
+}
+
+/* mini “pokeball” decorativa */
+.card > div > h1::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 14px;
+  height: 14px;
+  border: 3px solid var(--line);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, #fff 0 48%, var(--line) 48% 56%, #fff 56% 100%),
+    radial-gradient(circle at 50% 54%, #fff 0 22%, var(--line) 22% 40%, transparent 41%);
+  opacity: 0.9;
+}
+
+/* Responsivo */
+@media (max-width: 520px) {
+  h1::before,
+  h1::after {
+    display: none;
+  }
+  .card::before {
+    font-size: 10px;
+  }
+  .card > div {
+    grid-template-columns: 1fr;
+  }
 }

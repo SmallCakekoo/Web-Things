@@ -22,14 +22,14 @@ const App = () => {
       setError(false);
 
       try {
-        await fetch(`https://rickandmortyapi.com/api/character/?name=${query}`)
-          .then((response) => {
-            if (!response.ok) throw new Error('No results');
-            return response.json();
-          })
-          .then((data) => setResults(data.results.slice(0, 8)));
+        const response = await fetch(
+          `https://rickandmortyapi.com/api/character/?name=${query}`
+        );
+        if (!response.ok) throw new Error('No results');
+        const data = await response.json();
+        setResults(data.results);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error( error);
         setError(true);
         setResults([]);
       } finally {

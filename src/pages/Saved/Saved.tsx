@@ -8,6 +8,7 @@ export const Saved = () => {
   const movieContext = useContext(MovieContext);
   const navigate = useNavigate();
 
+  // Este const con el ! es para decirle a TS que no es null, porque ya validamos eso antes
   const { favorites, watchLater, setFavorites, setWatchLater } = movieContext!;
 
   const [favoritesState, setFavoritesState] = useState<Movie[]>(favorites);

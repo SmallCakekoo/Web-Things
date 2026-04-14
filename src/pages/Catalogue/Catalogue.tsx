@@ -1,5 +1,5 @@
 import movies from "../../data/movies.json";
-import { useContext, useState, type ChangeEvent } from "react";
+import { useContext, useEffect, useState, type ChangeEvent } from "react";
 import { MovieContext } from "../../context/MovieContext";
 import type { Movie } from "../../context/MovieContext";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,16 @@ export const Catalogue = () => {
   }
 
   const { favorites, watchLater, setFavorites, setWatchLater } = movieContext;
+  const [favoritesState, setFavoritesState] = useState<Movie[]>(favorites);
+  const [watchLaterState, setWatchLaterState] = useState<Movie[]>(watchLater);
+
+  useEffect(() => {
+    setFavoritesState(favorites);
+  }, [favorites]);
+
+  useEffect(() => {
+    setWatchLaterState(watchLater);
+  }, [watchLater]);
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearch(event.target.value);
@@ -24,14 +34,18 @@ export const Catalogue = () => {
   });
 
   const handleAddToFavorites = (movie: Movie) => {
-    if (!favorites.find((i) => i.id === movie.id)) {
-      setFavorites((prev) => [...prev, movie]);
+    if (!favoritesState.find((i) => i.id === movie.id)) {
+      const nextFavorites: Movie[] = [...favoritesState, movie];
+      setFavoritesState(nextFavorites);
+      setFavorites(nextFavorites);
     }
   };
 
   const handleAddToWatchLater = (movie: Movie) => {
-    if (!watchLater.find((i) => i.id === movie.id)) {
-      setWatchLater((prev) => [...prev, movie]);
+    if (!watchLaterState.find((i) => i.id === movie.id)) {
+      const nextWatchLater: Movie[] = [...watchLaterState, movie];
+      setWatchLaterState(nextWatchLater);
+      setWatchLater(nextWatchLater);
     }
   };
 
@@ -46,8 +60,8 @@ export const Catalogue = () => {
       />
 
       {filteredMovies.map((movie: Movie) => {
-        const isFavorite = favorites.some((m) => m.id === movie.id);
-        const isWatchLater = watchLater.some((m) => m.id === movie.id);
+        const isFavorite = favoritesState.some((m) => m.id === movie.id);
+        const isWatchLater = watchLaterState.some((m) => m.id === movie.id);
 
         return (
           <div

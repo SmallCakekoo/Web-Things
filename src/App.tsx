@@ -1,13 +1,20 @@
-import { Form } from './components/Form'
-
-import './App.css'
+import Saved from "./pages/Saved/Saved";
+import Catalogue from "./pages/Catalogue/Catalogue";
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import { MovieProvider } from "./context/MovieContext";
 
 function App() {
   return (
-    <div className="App">
-      <Form />
-    </div>
+    <>
+      <MovieProvider>
+        <Routes>
+          <Route path="/saved" element={<Saved />} />
+          <Route path="/catalogue" element={<Catalogue />} />
+        </Routes>
+      </MovieProvider>
+    </>
   );
 }
 
-export default App
+export default App;

@@ -1,20 +1,13 @@
-import Saved from "./pages/Saved/Saved";
-import Catalogue from "./pages/Catalogue/Catalogue";
-import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { MovieProvider } from "./context/MovieContext";
+import { NotesPage } from "./pages/NotesPage.tsx";
+import "./App.css";
 
-function App() {
+const App = () => {
   return (
-    <>
-      <MovieProvider>
-        <Routes>
-          <Route path="/saved" element={<Saved />} />
-          <Route path="/catalogue" element={<Catalogue />} />
-        </Routes>
-      </MovieProvider>
-    </>
+    <Routes>
+      <Route path="/" element={<NotesPage />} />
+    </Routes>
   );
-}
+};
 
 export default App;

@@ -1,12 +1,21 @@
 import { Routes, Route } from "react-router-dom";
-import { NotesPage } from "./pages/NotesPage.tsx";
+import { AllIncidentsPage } from "./pages/AllIncidentsPage.tsx";
+import { SummaryPage } from "./pages/SummaryPage.tsx";
+import { Navbar } from "./components/Navbar.tsx";
+import { IncidentsProvider } from "./context/IncidentsContext.tsx";
 import "./App.css";
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<NotesPage />} />
-    </Routes>
+    <IncidentsProvider>
+      <div className="app">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<AllIncidentsPage />} />
+          <Route path="/summary" element={<SummaryPage />} />
+        </Routes>
+      </div>
+    </IncidentsProvider>
   );
 };
 

@@ -1,22 +1,19 @@
-import { Routes, Route } from "react-router-dom";
-import { AllIncidentsPage } from "./pages/AllIncidentsPage.tsx";
-import { SummaryPage } from "./pages/SummaryPage.tsx";
-import { Navbar } from "./components/Navbar.tsx";
-import { IncidentsProvider } from "./context/IncidentsContext.tsx";
-import "./App.css";
+import  { AllRoomsPage } from "./pages/AllRoomsPage"
+import  { SummaryPage } from "./pages/SummaryPage"
+import { Routes, Route } from "react-router-dom"
+import { NavBar } from "./components/NavBar"
+import  { RoomsProvider } from "./context/RoomsContext"
 
 const App = () => {
-  return (
-    <IncidentsProvider>
-      <div className="app">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<AllIncidentsPage />} />
-          <Route path="/summary" element={<SummaryPage />} />
-        </Routes>
-      </div>
-    </IncidentsProvider>
-  );
-};
+	return (
+	<RoomsProvider>
+	<NavBar/>
+	<Routes>
+		<Route path="/" element={<AllRoomsPage/>}/>
+		<Route path="/summary" element={<SummaryPage/>}/>
+	</Routes>
+	</RoomsProvider>
+	)
+}
 
 export default App;

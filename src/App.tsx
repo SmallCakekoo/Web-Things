@@ -1,30 +1,70 @@
-import "./App.css";
-import { Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContex";
-import { Profile } from "./pages/Profile";
+// import { useEffect } from "react"; // removed unused import
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
+// import { useProducts } from "./context/ProductContext"; // removed unused import
+import { Navbar } from "./components/Navbar";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Login } from "./pages/Login";
-import { Register } from "./pages/Register";
-
-import ProtectedRoute from "./utils/ProtectedRoute";
+import { ProductList } from "./pages/ProductList";
+import { ProductDetail } from "./pages/ProductDetail";
+import { CartPage } from "./pages/CartPage";
+import { AdminDashboard } from "./pages/AdminDashboard";
 
 function App() {
+  const { user } = useAuth();
+
+  // Product loading is handled in ProductProvider
+
   return (
-    <>
-      <AuthProvider>
+    <div className="app-layout">
+      {user && <Navbar />}
+      <main className="main-content">
         <Routes>
+          <Route path="/login" element={<Login />} />
+          
           <Route
-            path="/"
+            path="/products"
             element={
               <ProtectedRoute>
-                <Profile />
+                <ProductList />
               </ProtectedRoute>
             }
           />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Register />} />
+          
+          <Route
+            path="/products/:id"
+            element={
+              <ProtectedRoute>
+                <ProductDetail />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute allowedRoles={["client"]}>
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="*" element={<Navigate to="/products" replace />} />
         </Routes>
-      </AuthProvider>
-    </>
+      </main>
+      <footer className="app-footer">
+        <p>© {new Date().getFullYear()} Modern Redux Store - Pre-parcial React</p>
+      </footer>
+    </div>
   );
 }
 

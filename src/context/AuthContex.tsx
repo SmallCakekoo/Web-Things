@@ -1,49 +1,53 @@
-import { createContext, useState, type PropsWithChildren } from "react";
-
-export interface AppUser {
-  email: string;
-  role: "admin" | "user";
-}
+import { createContext, useState, useEffect, type PropsWithChildren } from "react";
+import type { User } from "@supabase/supabase-js";
+import { supabase } from "../supabase/supabaseConfig";
 
 export interface AuthContextType {
-  user: AppUser | null;
+  user: User | null;
   loading: boolean;
   error: string | null;
-  login: (email: string, password: string) => void;
-  register: (email: string, password: string, role: "admin" | "user") => void;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: PropsWithChildren) {
-  const [user, setUser]     = useState<AppUser | null>(null);
-  const [loading]           = useState<boolean>(false);
+  const [user, setUser]     = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError]   = useState<string | null>(null);
-  // Usuarios registrados en memoria: [email, password, role]
-  const [users, setUsers]   = useState<[string, string, "admin" | "user"][]>([]);
 
-  const login = (email: string, password: string) => {
-    const found = users.find(([e, p]) => e === email && p === password);
-    if (found) {
-      setUser({ email: found[0], role: found[2] });
-      setError(null);
-    } else {
-      setError("Credenciales incorrectas");
-    }
-  };
+  useEffect(() => {
+    // Recuperar sesión activa al cargar
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
-  const register = (email: string, password: string, role: "admin" | "user") => {
-    if (users.find(([e]) => e === email)) {
-      setError("El usuario ya existe");
-      return;
-    }
-    setUsers(prev => [...prev, [email, password, role]]);
-    setUser({ email, role });
+    // Escuchar cambios de auth (login, logout, refresh)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const login = async (email: string, password: string) => {
     setError(null);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) setError(error.message);
   };
 
-  const logout = () => {
+  const register = async (email: string, password: string) => {
+    setError(null);
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) setError(error.message);
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
     setError(null);
   };

@@ -8,20 +8,18 @@ export const Login = () => {
   const context  = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    context?.login(email, password);
+    await context?.login(email, password);
+    if (!context?.error) navigate("/");
   };
-
-  // Si login fue exitoso, redirigir
-  if (context?.user) navigate("/");
 
   return (
     <div style={{ margin: "20px" }}>
       <h2>Iniciar Sesión</h2>
       {context?.error && <p style={{ color: "red" }}>{context.error}</p>}
       <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "10px", maxWidth: "300px" }}>
-        <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
+        <input type="email"    placeholder="Email"      value={email}    onChange={e => setEmail(e.target.value)}    required />
         <input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} required />
         <button type="submit">Iniciar sesión</button>
       </form>

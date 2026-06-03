@@ -1,33 +1,56 @@
-import React, { createContext, useState, useEffect, type PropsWithChildren } from "react";
-import { onAuthStateChanged, type User } from "firebase/auth";
-import { authService } from "../firebase/firebaseConfig";
+import { createContext, useState, type PropsWithChildren } from "react";
+
+export interface AppUser {
+  email: string;
+  role: "admin" | "user";
+}
 
 export interface AuthContextType {
-    user: User | null;
-    uid: string | null;
-    loading: boolean;
+  user: AppUser | null;
+  loading: boolean;
+  error: string | null;
+  login: (email: string, password: string) => void;
+  register: (email: string, password: string, role: "admin" | "user") => void;
+  logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: PropsWithChildren) {
-    const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+  const [user, setUser]     = useState<AppUser | null>(null);
+  const [loading]           = useState<boolean>(false);
+  const [error, setError]   = useState<string | null>(null);
+  // Usuarios registrados en memoria: [email, password, role]
+  const [users, setUsers]   = useState<[string, string, "admin" | "user"][]>([]);
 
-    useEffect(() => {
-        // onAuthStateChanged devuelve una función para desuscribirse del listener
-        const unsubscribe = onAuthStateChanged(authService, (currentUser) => {
-            setUser(currentUser);
-            setLoading(false);
-        });
+  const login = (email: string, password: string) => {
+    const found = users.find(([e, p]) => e === email && p === password);
+    if (found) {
+      setUser({ email: found[0], role: found[2] });
+      setError(null);
+    } else {
+      setError("Credenciales incorrectas");
+    }
+  };
 
-        // Limpiamos el listener cuando el componente se desmonta
-        return () => unsubscribe();
-    }, []);
+  const register = (email: string, password: string, role: "admin" | "user") => {
+    if (users.find(([e]) => e === email)) {
+      setError("El usuario ya existe");
+      return;
+    }
+    setUsers(prev => [...prev, [email, password, role]]);
+    setUser({ email, role });
+    setError(null);
+  };
 
-    return (
-        <AuthContext.Provider value={{ user, uid: user ? user.uid : null, loading }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  const logout = () => {
+    setUser(null);
+    setError(null);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, loading, error, login, register, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

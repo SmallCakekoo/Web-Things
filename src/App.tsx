@@ -1,30 +1,23 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContex";
-import { Profile } from "./pages/Profile";
-import { Login } from "./pages/Login";
-import { Register } from "./pages/Register";
-
-import ProtectedRoute from "./utils/ProtectedRoute";
+import { PokemonProvider } from "./context/PokemonContext";
+import PokemonList from "./pages/PokemonList";
+import PokemonDetail from "./pages/PokemonDetail";
+import Analysis from "./pages/Analysis";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <>
-      <AuthProvider>
+    <PokemonProvider>
+      <div>
+        <Navbar />
         <Routes>
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Register />} />
+          <Route path="/" element={<PokemonList />} />
+          <Route path="/pokemon/:name" element={<PokemonDetail />} />
+          <Route path="/analysis" element={<Analysis />} />
         </Routes>
-      </AuthProvider>
-    </>
+      </div>
+    </PokemonProvider>
   );
 }
 
